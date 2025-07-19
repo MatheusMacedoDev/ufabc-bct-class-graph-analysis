@@ -34,7 +34,7 @@ edgelist_dataframe.Classes = edgelist_dataframe.Classes.str.strip()
 edgelist_dataframe = edgelist_dataframe.reset_index(drop=True)
 
 Graph = nx.from_pandas_edgelist(
-    edgelist_dataframe, source="Dependencies", target="Classes", create_using=nx.Graph
+    edgelist_dataframe, source="Dependencies", target="Classes", create_using=nx.DiGraph
 )
 
 
@@ -44,15 +44,15 @@ Graph = nx.from_pandas_edgelist(
 
 # Graph view
 
-pos = nx.spring_layout(Graph, seed=30)
-plt.figure(figsize=(18, 9))
+# pos = nx.spring_layout(Graph, seed=30)
+# plt.figure(figsize=(18, 9))
 
-nx.draw_networkx_nodes(Graph, pos, node_size=100, node_color='skyblue')
-nx.draw_networkx_edges(Graph, pos, alpha=0.3)
-nx.draw_networkx_labels(Graph, pos, font_size=6)
+# nx.draw_networkx_nodes(Graph, pos, node_size=100, node_color='skyblue')
+# nx.draw_networkx_edges(Graph, pos, alpha=0.3, arrows=True, arrowsize=12, arrowstyle='-|>')
+# nx.draw_networkx_labels(Graph, pos, font_size=6)
 
-plt.title("Disciplinas BC&T")
-plt.show()
+# plt.title("Disciplinas BC&T")
+# plt.show()
 
 
 
@@ -73,8 +73,36 @@ avarage_degree = sum_degrees / len(degrees)
 
 print('Grau Médio: ' + str(round(avarage_degree, 2)))
 
+out_degree_node_list = Graph.out_degree()
+out_degree_node_list = sorted(out_degree_node_list, key=lambda node: node[1], reverse=True)
+
+# print(out_degree_node_list)
+
+avarage_clustering_coefficient = nx.average_clustering(Graph)
+
+print('Coeficiente de clustering: ' + str(avarage_clustering_coefficient))
+
+node_betwenness_list = nx.betweenness_centrality(Graph, normalized=False)
+node_betwenness_list = sorted(node_betwenness_list.items(), key=lambda node: node[1], reverse=True)
+
+# print(node_betwenness_list)
+
+node_closeness_list = nx.closeness_centrality(Graph)
+node_closeness_list = sorted(node_closeness_list.items(), key=lambda node: node[1], reverse=True)
+
+# print(node_closeness_list)
+
+node_eigenvector_list = nx.eigenvector_centrality(Graph)
+node_eigenvector_list = sorted(node_eigenvector_list.items(), key=lambda node: node[1], reverse=True)
+
+print(node_eigenvector_list)
+
+graph_density = nx.density(Graph)
+
+print('Densidade: ' + str(graph_density))
+
 # print(dataframe.to_string())
 
-df = nx.to_pandas_edgelist(Graph)
-df.to_excel('graph_edgelist.xlsx', index=False)
-print(df)
+# df = nx.to_pandas_edgelist(Graph)
+# df.to_excel('graph_edgelist.xlsx', index=False)
+# print(df)
